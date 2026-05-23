@@ -1,0 +1,159 @@
+@import "tailwindcss";
+
+* { font-family: 'Inter', sans-serif; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: #f8f7ff; margin: 0; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-14px) rotate(3deg); }
+}
+@keyframes float2 {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(-4deg); }
+}
+@keyframes blob-pulse {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.06) rotate(8deg); }
+}
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes bounce-in {
+  0%   { transform: scale(0.7); opacity: 0; }
+  70%  { transform: scale(1.08); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes slide-up {
+  from { transform: translateY(30px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+@keyframes ticker {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.float        { animation: float 4s ease-in-out infinite; }
+.float2       { animation: float2 5s ease-in-out infinite; }
+.blob-pulse   { animation: blob-pulse 6s ease-in-out infinite; }
+.spin-slow    { animation: spin-slow 18s linear infinite; }
+.bounce-in    { animation: bounce-in 0.6s cubic-bezier(.36,.07,.19,.97) both; }
+.slide-up     { animation: slide-up 0.7s ease both; }
+.ticker-wrap  { overflow: hidden; }
+.ticker       { display: flex; animation: ticker 28s linear infinite; }
+
+/* Purple pill badge */
+.badge-new {
+  background: #7c3aed;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  letter-spacing: 0.5px;
+}
+
+/* Primary CTA button — purple with arrow circle */
+.btn-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #7c3aed;
+  color: #fff;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 14px 20px 14px 28px;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  box-shadow: 0 8px 24px rgba(124,58,237,0.35);
+}
+.btn-cta:hover {
+  background: #6d28d9;
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(124,58,237,0.45);
+}
+.btn-cta .arrow-circle {
+  width: 34px; height: 34px;
+  background: rgba(255,255,255,0.25);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Floating card — white shadow */
+.float-card {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.10);
+  padding: 16px 20px;
+}
+
+/* Category card dark */
+.cat-card-dark {
+  background: #1e1b4b;
+  border-radius: 20px;
+  padding: 28px 24px;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.cat-card-purple {
+  background: #7c3aed;
+  border-radius: 20px;
+  padding: 28px 24px;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Nav search */
+.nav-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f1f0f9;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+/* Star rating */
+.stars { color: #f59e0b; font-size: 14px; letter-spacing: 1px; }
+
+/* Avatar stack */
+.avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  object-fit: cover;
+  margin-left: -10px;
+  background: linear-gradient(135deg, #a78bfa, #ec4899);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: #fff;
+}
+.avatar:first-child { margin-left: 0; }
+
+/* Blob shapes */
+.blob-orange {
+  width: 340px; height: 340px;
+  background: linear-gradient(135deg, #fb923c, #f97316, #ef4444);
+  border-radius: 60% 40% 55% 45% / 50% 60% 40% 50%;
+}
+.blob-pink {
+  width: 260px; height: 260px;
+  background: linear-gradient(135deg, #f472b6, #ec4899, #db2777);
+  border-radius: 50% 60% 40% 55% / 55% 45% 60% 40%;
+}
+.blob-teal {
+  width: 200px; height: 200px;
+  background: linear-gradient(135deg, #2dd4bf, #06b6d4, #3b82f6);
+  border-radius: 55% 45% 60% 40% / 40% 55% 45% 60%;
+}
+.blob-lavender {
+  width: 180px; height: 180px;
+  background: linear-gradient(135deg, #c4b5fd, #a78bfa, #8b5cf6);
+  border-radius: 45% 55% 40% 60% / 60% 40% 55% 45%;
+}
