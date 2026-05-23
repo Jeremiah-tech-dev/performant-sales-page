@@ -97,13 +97,9 @@ const logos = ['Seedance 2.0 Text to Video','Seedance 2.0 Image to Video','Eleve
 
         <!-- Hamburger (mobile only) -->
         <button class="nav-hamburger" @click.stop="mobileOpen = !mobileOpen" aria-label="Toggle menu">
-          <template v-if="mobileOpen">
-            <span class="ham-x ham-x1"></span>
-            <span class="ham-x ham-x2"></span>
-          </template>
-          <template v-else>
-            <span></span><span></span><span></span>
-          </template>
+          <span :class="{ 'bar-open': mobileOpen }"></span>
+          <span :class="{ 'bar-open-mid': mobileOpen }"></span>
+          <span :class="{ 'bar-open': mobileOpen }"></span>
         </button>
 
         <!-- Category links -->
@@ -136,60 +132,130 @@ const logos = ['Seedance 2.0 Text to Video','Seedance 2.0 Image to Video','Eleve
         </a>
       </div>
       <!-- Mobile menu -->
-      <div v-show="mobileOpen" class="mobile-menu" @click.stop>
-        <!-- Gen AI accordion -->
-        <button class="mobile-link mobile-ai-toggle" @click="mobileAiOpen = !mobileAiOpen">
-          <span>✦ Gen AI</span>
-          <span class="ai-chevron" :class="{ open: mobileAiOpen }">▾</span>
-        </button>
-        <div v-show="mobileAiOpen" class="mobile-ai-submenu">
-          <a href="#" class="mobile-ai-item" v-for="tool in genAiTools" :key="tool.name">
-            <span class="mobile-ai-emoji">{{ tool.emoji }}</span>
-            <div>
-              <p class="ai-item-name">{{ tool.name }}</p>
-              <p class="ai-item-desc" style="text-align:left;">{{ tool.desc }}</p>
-            </div>
-          </a>
+      <transition name="menu-slide">
+        <div v-show="mobileOpen" class="mobile-menu" @click.stop>
+
+          <!-- ── Utility links ── -->
+          <div class="mm-utility">
+            <a href="#" class="mm-util-link">License</a>
+            <a href="#" class="mm-util-link">Enterprise</a>
+            <a href="#" class="mm-util-link">Pricing</a>
+          </div>
+
+          <!-- ── Nav links ── -->
+          <div class="mm-nav-links">
+            <!-- Gen AI accordion -->
+            <button class="mm-link mm-ai-toggle" @click="mobileAiOpen = !mobileAiOpen">
+              <span class="mm-ai-label"><span class="mm-ai-star">✦</span> Gen AI</span>
+              <span class="ai-chevron" :class="{ open: mobileAiOpen }">▾</span>
+            </button>
+            <transition name="submenu-slide">
+              <div v-show="mobileAiOpen" class="mobile-ai-submenu">
+                <a href="#" class="mobile-ai-item" v-for="tool in genAiTools" :key="tool.name">
+                  <span class="mobile-ai-emoji">{{ tool.emoji }}</span>
+                  <div>
+                    <p class="ai-item-name">{{ tool.name }}</p>
+                    <p class="ai-item-desc" style="text-align:left;">{{ tool.desc }}</p>
+                  </div>
+                </a>
+              </div>
+            </transition>
+            <a href="#" class="mm-link">Video Templates</a>
+            <a href="#" class="mm-link">Stock Video</a>
+            <a href="#" class="mm-link">Audio</a>
+            <a href="#" class="mm-link">Graphics</a>
+            <a href="#" class="mm-link">Design Templates</a>
+            <a href="#" class="mm-link">Photos</a>
+            <a href="#" class="mm-link">3D</a>
+            <a href="#" class="mm-link">Fonts</a>
+            <a href="#" class="mm-link">Web</a>
+          </div>
+
+          <!-- ── Auth buttons ── -->
+          <div class="mm-auth">
+            <a href="#" class="mm-login">Log in</a>
+            <a href="#" class="mm-signup">Sign up free</a>
+          </div>
+
+          <!-- ── CTA ── -->
+          <div class="mm-cta-wrap">
+            <a href="#" class="mm-cta">✦ Get unlimited downloads</a>
+          </div>
+
         </div>
-        <a href="#" class="mobile-link">Video Templates</a>
-        <a href="#" class="mobile-link">Stock Video</a>
-        <a href="#" class="mobile-link">Audio</a>
-        <a href="#" class="mobile-link">Graphics</a>
-        <a href="#" class="mobile-link">Design Templates</a>
-        <a href="#" class="mobile-link">Photos</a>
-        <a href="#" class="mobile-link">3D</a>
-        <a href="#" class="mobile-link">Fonts</a>
-        <a href="#" class="mobile-link">Web</a>
-        <div class="mobile-menu-actions">
-          <a href="#" class="mobile-link">Log in</a>
-          <a href="#" class="mobile-link-cta">Sign up free</a>
-        </div>
-      </div>
+      </transition>
     </header>
 
     <!-- ═══ HERO ═══ -->
-    <section style="text-align:center;padding:40px 32px 0;max-width:900px;margin:0 auto;">
+    <section class="hero-section">
 
-      <!-- Badge pill -->
-      <div style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid #e5e7eb;border-radius:999px;padding:8px 20px;font-size:13px;font-weight:600;color:#374151;margin-bottom:32px;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
-        <span>🎉</span>
-        <span>#1 Marketplace for Video Creators</span>
+      <!-- ── Mobile cinematic background (mobile only) ── -->
+      <div class="mobile-hero-bg" aria-hidden="true">
+        <!-- Colour orbs that bloom open -->
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        <div class="orb orb-4"></div>
+        <!-- Light rays -->
+        <div class="ray ray-1"></div>
+        <div class="ray ray-2"></div>
+        <div class="ray ray-3"></div>
+        <!-- Floating sparkles -->
+        <div class="spark spark-1"></div>
+        <div class="spark spark-2"></div>
+        <div class="spark spark-3"></div>
+        <div class="spark spark-4"></div>
+        <div class="spark spark-5"></div>
+        <!-- Camera -->
+        <div class="cam-wrap">
+          <svg class="cam-svg" viewBox="0 0 120 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- body -->
+            <rect x="8" y="22" width="104" height="62" rx="10" fill="#111" stroke="#22c55e" stroke-width="2.5"/>
+            <!-- viewfinder bump -->
+            <rect x="38" y="10" width="44" height="16" rx="6" fill="#111" stroke="#22c55e" stroke-width="2"/>
+            <!-- lens outer ring -->
+            <circle cx="60" cy="53" r="22" fill="#1a1a1a" stroke="#22c55e" stroke-width="2.5"/>
+            <!-- lens mid ring -->
+            <circle cx="60" cy="53" r="15" fill="#0f0f0f" stroke="rgba(34,197,94,0.4)" stroke-width="1.5"/>
+            <!-- lens inner -->
+            <circle cx="60" cy="53" r="8" fill="#22c55e" opacity="0.9"/>
+            <!-- lens shine -->
+            <circle cx="56" cy="49" r="2.5" fill="white" opacity="0.5"/>
+            <!-- shutter button -->
+            <circle cx="96" cy="34" r="5" fill="#22c55e"/>
+            <!-- flash -->
+            <rect x="14" y="28" width="12" height="8" rx="3" fill="#fbbf24" opacity="0.85"/>
+          </svg>
+          <!-- shutter flash overlay -->
+          <div class="shutter-flash"></div>
+        </div>
+        <!-- scan line -->
+        <div class="scan-line"></div>
       </div>
 
-      <!-- Headline -->
-      <h1 style="font-size:clamp(48px,8vw,88px);font-weight:900;line-height:0.95;letter-spacing:-2px;color:#111;text-transform:uppercase;margin:0 0 24px;">
-        THE AI TOOLKIT <span style="color:#22c55e;">CREATORS</span><br/>ACTUALLY NEED
-      </h1>
+      <!-- hero content -->
+      <div class="hero-content">
+        <!-- Badge pill -->
+        <div style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid #e5e7eb;border-radius:999px;padding:8px 20px;font-size:13px;font-weight:600;color:#374151;margin-bottom:32px;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+          <span>🎉</span>
+          <span>#1 Marketplace for Video Creators</span>
+        </div>
 
-      <!-- Subtitle -->
-      <p style="font-size:16px;color:#6b7280;margin:0 0 36px;font-weight:400;letter-spacing:0.1px;">
-        With Built-In AI Models, Template Marketplace &amp; Plugin Support
-      </p>
+        <!-- Headline -->
+        <h1 style="font-size:clamp(48px,8vw,88px);font-weight:900;line-height:0.95;letter-spacing:-2px;color:#111;text-transform:uppercase;margin:0 0 24px;">
+          THE AI TOOLKIT <span style="color:#22c55e;">CREATORS</span><br/>ACTUALLY NEED
+        </h1>
 
-      <!-- CTA -->
-      <a href="#" style="display:inline-block;background:#22c55e;color:#fff;font-size:16px;font-weight:700;padding:16px 48px;border-radius:999px;text-decoration:none;box-shadow:0 8px 24px rgba(34,197,94,0.35);transition:all 0.2s;margin-bottom:60px;">
-        Browse Marketplace
-      </a>
+        <!-- Subtitle -->
+        <p style="font-size:16px;color:#6b7280;margin:0 0 36px;font-weight:400;letter-spacing:0.1px;">
+          With Built-In AI Models, Template Marketplace &amp; Plugin Support
+        </p>
+
+        <!-- CTA -->
+        <a href="#" style="display:inline-block;background:#22c55e;color:#fff;font-size:16px;font-weight:700;padding:16px 48px;border-radius:999px;text-decoration:none;box-shadow:0 8px 24px rgba(34,197,94,0.35);transition:all 0.2s;margin-bottom:60px;">
+          Browse Marketplace
+        </a>
+      </div>
     </section>
 
     <!-- ═══ POLAROID CARDS ON DEEP U-WIRE ═══ -->
@@ -799,8 +865,10 @@ a[href="#"]:last-of-type:hover {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 4px;
+  padding: 6px;
   margin-left: auto;
+  width: 36px;
+  height: 36px;
 }
 .nav-hamburger span {
   display: block;
@@ -808,51 +876,86 @@ a[href="#"]:last-of-type:hover {
   height: 2px;
   background: #111;
   border-radius: 2px;
-  transition: background 0.15s;
+  transition: transform 0.35s cubic-bezier(.77,0,.18,1), opacity 0.2s;
+  transform-origin: center;
 }
-.ham-x1 {
-  transform: rotate(45deg) translate(5px, 5px);
-}
-.ham-x2 {
-  transform: rotate(-45deg) translate(5px, -5px);
-}
+/* bar 1 & 3 rotate into X */
+.bar-open:first-child  { transform: translateY(7px) rotate(45deg); }
+.bar-open:last-child   { transform: translateY(-7px) rotate(-45deg); }
+/* middle bar fades out */
+.bar-open-mid          { opacity: 0; transform: scaleX(0); }
 
 /* ── Mobile menu ── */
 .mobile-menu {
-  display: flex;
-  flex-direction: column;
-  background: #fff;
-  border-top: 1px solid #e5e7eb;
-  padding: 12px 0;
-}
-.mobile-link {
-  font-size: 15px;
-  font-weight: 500;
-  color: #374151;
-  text-decoration: none;
-  padding: 12px 24px;
-  transition: background 0.15s;
-}
-.mobile-link:hover { background: #f3f4f6; }
-.mobile-menu-actions {
-  display: flex;
-  gap: 12px;
-  padding: 12px 24px 4px;
-  border-top: 1px solid #e5e7eb;
-  margin-top: 4px;
-}
-.mobile-link-cta {
-  font-size: 14px;
-  font-weight: 700;
-  color: #fff;
-  background: #22c55e;
-  padding: 8px 20px;
-  border-radius: 999px;
-  text-decoration: none;
+  background: #0f0f0f;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  overflow: hidden;
 }
 
-/* Mobile AI submenu */
-.mobile-ai-toggle {
+/* slide transition */
+.menu-slide-enter-active,
+.menu-slide-leave-active {
+  transition: max-height 0.4s cubic-bezier(.77,0,.18,1), opacity 0.3s ease;
+  max-height: 800px;
+}
+.menu-slide-enter-from,
+.menu-slide-leave-to {
+  max-height: 0;
+  opacity: 0;
+}
+
+/* submenu slide */
+.submenu-slide-enter-active,
+.submenu-slide-leave-active {
+  transition: max-height 0.3s ease, opacity 0.25s ease;
+  max-height: 600px;
+  overflow: hidden;
+}
+.submenu-slide-enter-from,
+.submenu-slide-leave-to {
+  max-height: 0;
+  opacity: 0;
+}
+
+/* utility row */
+.mm-utility {
+  display: flex;
+  gap: 8px;
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.mm-util-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.12);
+  transition: color 0.15s, border-color 0.15s;
+}
+.mm-util-link:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
+
+/* nav links */
+.mm-nav-links {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.mm-link {
+  font-size: 15px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.75);
+  text-decoration: none;
+  padding: 13px 20px;
+  transition: background 0.15s, color 0.15s;
+  display: block;
+}
+.mm-link:hover { background: rgba(255,255,255,0.05); color: #fff; }
+
+/* Gen AI toggle */
+.mm-ai-toggle {
   width: 100%;
   background: none;
   border: none;
@@ -861,11 +964,29 @@ a[href="#"]:last-of-type:hover {
   justify-content: space-between;
   align-items: center;
   font-family: inherit;
+  padding: 13px 20px;
+  transition: background 0.15s;
 }
+.mm-ai-toggle:hover { background: rgba(255,255,255,0.05); }
+.mm-ai-label {
+  font-size: 15px;
+  font-weight: 700;
+  color: #a78bfa;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.mm-ai-star {
+  font-size: 12px;
+  color: #a78bfa;
+}
+.mm-ai-toggle .ai-chevron { color: #a78bfa; }
+
+/* AI submenu on dark bg */
 .mobile-ai-submenu {
-  background: #f5f3ff;
-  border-top: 1px solid #ede9fe;
-  border-bottom: 1px solid #ede9fe;
+  background: rgba(124,58,237,0.08);
+  border-top: 1px solid rgba(124,58,237,0.15);
+  border-bottom: 1px solid rgba(124,58,237,0.15);
 }
 .mobile-ai-item {
   display: flex;
@@ -875,8 +996,67 @@ a[href="#"]:last-of-type:hover {
   text-decoration: none;
   transition: background 0.15s;
 }
-.mobile-ai-item:hover { background: #ede9fe; }
+.mobile-ai-item:hover { background: rgba(124,58,237,0.12); }
 .mobile-ai-emoji { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+.mobile-ai-item .ai-item-name { color: #fff; }
+.mobile-ai-item .ai-item-desc { color: rgba(255,255,255,0.45); }
+
+/* auth buttons */
+.mm-auth {
+  display: flex;
+  gap: 10px;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.mm-login {
+  flex: 1;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.8);
+  text-decoration: none;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.15);
+  transition: background 0.15s, color 0.15s;
+}
+.mm-login:hover { background: rgba(255,255,255,0.08); color: #fff; }
+.mm-signup {
+  flex: 1;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #111;
+  background: #fff;
+  text-decoration: none;
+  padding: 12px;
+  border-radius: 12px;
+  transition: background 0.15s;
+}
+.mm-signup:hover { background: #e5e7eb; }
+
+/* CTA */
+.mm-cta-wrap {
+  padding: 16px 20px 20px;
+}
+.mm-cta {
+  display: block;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 800;
+  color: #fff;
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  text-decoration: none;
+  padding: 16px;
+  border-radius: 14px;
+  box-shadow: 0 4px 24px rgba(34,197,94,0.4);
+  letter-spacing: 0.2px;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.mm-cta:hover {
+  box-shadow: 0 8px 32px rgba(34,197,94,0.55);
+  transform: translateY(-1px);
+}
 
 @media (max-width: 768px) {
   .nav-hamburger { display: flex; }
@@ -954,5 +1134,143 @@ a[href="#"]:last-of-type:hover {
   .cards-desktop { display: none; }
   .cards-mobile { display: flex; }
   .intro-grid { grid-template-columns: 1fr; }
+}
+
+/* ═══ HERO SECTION ═══ */
+.hero-section {
+  position: relative;
+  text-align: center;
+  padding: 40px 32px 0;
+  max-width: 900px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.hero-content { position: relative; z-index: 2; }
+
+/* hide on desktop */
+.mobile-hero-bg { display: none; }
+
+@media (max-width: 768px) {
+  .mobile-hero-bg {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  /* ── Colour orbs ── */
+  @keyframes bloom {
+    0%   { transform: scale(0) translate(0,0); opacity: 0; }
+    40%  { opacity: 0.55; }
+    100% { transform: scale(1) translate(var(--tx), var(--ty)); opacity: 0.18; }
+  }
+  @keyframes drift {
+    0%,100% { transform: scale(1)   translate(var(--tx), var(--ty)); }
+    50%      { transform: scale(1.15) translate(calc(var(--tx) + 12px), calc(var(--ty) - 10px)); }
+  }
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    animation: bloom 1.4s cubic-bezier(.22,1,.36,1) forwards, drift 6s ease-in-out infinite;
+    animation-delay: var(--d), calc(var(--d) + 1.4s);
+    filter: blur(32px);
+  }
+  .orb-1 { width:220px; height:220px; background:#22c55e; top:-40px; left:-60px; --tx:-10px; --ty:20px; --d:0s; }
+  .orb-2 { width:180px; height:180px; background:#a78bfa; top:20px;  right:-50px; --tx:10px; --ty:30px; --d:0.2s; }
+  .orb-3 { width:160px; height:160px; background:#f472b6; bottom:40px; left:10px;  --tx:-15px; --ty:-10px; --d:0.4s; }
+  .orb-4 { width:140px; height:140px; background:#fbbf24; bottom:20px; right:20px; --tx:8px; --ty:-20px; --d:0.6s; }
+
+  /* ── Light rays ── */
+  @keyframes ray-in {
+    0%   { opacity: 0; transform: scaleY(0) rotate(var(--r)); transform-origin: top center; }
+    100% { opacity: 0.12; transform: scaleY(1) rotate(var(--r)); transform-origin: top center; }
+  }
+  .ray {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.9) 0%, transparent 100%);
+    transform-origin: top center;
+    animation: ray-in 1.8s ease forwards;
+    animation-delay: var(--d);
+  }
+  .ray-1 { --r: -25deg; --d: 0.5s; }
+  .ray-2 { --r:   0deg; --d: 0.7s; }
+  .ray-3 { --r:  25deg; --d: 0.9s; }
+
+  /* ── Sparkles ── */
+  @keyframes sparkle {
+    0%,100% { opacity: 0; transform: scale(0) translate(0,0); }
+    50%      { opacity: 1; transform: scale(1) translate(var(--sx), var(--sy)); }
+  }
+  .spark {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #fff;
+    animation: sparkle var(--dur) ease-in-out infinite;
+    animation-delay: var(--d);
+  }
+  .spark-1 { top:18%; left:15%; --sx:6px;  --sy:-8px;  --dur:2.2s; --d:0.3s; }
+  .spark-2 { top:12%; right:20%; --sx:-5px; --sy:6px;   --dur:2.8s; --d:0.8s; }
+  .spark-3 { top:55%; left:8%;  --sx:8px;  --sy:-4px;  --dur:2.4s; --d:1.1s; }
+  .spark-4 { top:65%; right:12%; --sx:-6px; --sy:-8px;  --dur:3.0s; --d:0.5s; }
+  .spark-5 { top:35%; left:50%; --sx:4px;  --sy:10px;  --dur:2.6s; --d:1.4s; }
+
+  /* ── Camera ── */
+  @keyframes cam-enter {
+    0%   { opacity: 0; transform: scale(0.4) translateY(30px); }
+    60%  { opacity: 1; transform: scale(1.08) translateY(-6px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  @keyframes cam-float {
+    0%,100% { transform: translateY(0) rotate(-2deg); }
+    50%      { transform: translateY(-10px) rotate(2deg); }
+  }
+  @keyframes cam-glow {
+    0%,100% { filter: drop-shadow(0 0 8px rgba(34,197,94,0.5)); }
+    50%      { filter: drop-shadow(0 0 22px rgba(34,197,94,0.9)); }
+  }
+  @keyframes shutter {
+    0%,90%,100% { opacity: 0; }
+    92%          { opacity: 0.85; }
+    96%          { opacity: 0; }
+  }
+  .cam-wrap {
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
+    width: 110px;
+    animation: cam-enter 1s cubic-bezier(.34,1.56,.64,1) 0.6s both,
+               cam-float 4s ease-in-out 1.6s infinite,
+               cam-glow  3s ease-in-out 1.6s infinite;
+  }
+  .cam-svg { width: 100%; display: block; }
+  .shutter-flash {
+    position: absolute;
+    inset: 0;
+    background: #fff;
+    border-radius: 10px;
+    animation: shutter 4s ease-in-out 2s infinite;
+    pointer-events: none;
+  }
+
+  /* ── Scan line ── */
+  @keyframes scan {
+    0%   { top: 0%;   opacity: 0.6; }
+    100% { top: 100%; opacity: 0; }
+  }
+  .scan-line {
+    position: absolute;
+    left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(34,197,94,0.7), transparent);
+    animation: scan 3s linear 1.5s infinite;
+  }
 }
 </style>
