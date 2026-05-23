@@ -1,15 +1,15 @@
 <script setup lang="ts">
 const cards = [
   { label: 'AI Prompts',  sub: 'Generate prompts for any AI model', bg: '#f472b6', rotate: '-6deg', top: '0px',
-    video: 'https://videos.pexels.com/video-files/3129671/3129671-hd_1920_1080_30fps.mp4' },
+    video: 'https://videos.pexels.com/video-files/3129671/3129671-hd_1920_1080_30fps.mp4', iframe: '' },
   { label: 'Veo 3',       sub: 'Cinematic AI video generations',     bg: '#a3e635', rotate: '-3deg', top: '0px',
-    video: 'https://videos.pexels.com/video-files/3571264/3571264-hd_1920_1080_30fps.mp4' },
+    video: 'https://www.pexels.com/download/video/18069701/', iframe: '' },
   { label: 'Templates',   sub: 'DaVinci & Premiere Pro packs',       bg: '#22d3ee', rotate: '0deg',  top: '-12px',
-    video: 'https://videos.pexels.com/video-files/1093662/1093662-hd_1920_1080_30fps.mp4' },
+    video: 'https://www.pexels.com/download/video/31723814/', iframe: '' },
   { label: 'KlingAI',     sub: 'Ready-to-use prompt bundles',        bg: '#fb923c', rotate: '3deg',  top: '0px',
-    video: 'https://videos.pexels.com/video-files/3129671/3129671-sd_640_360_30fps.mp4' },
+    video: 'https://www.pexels.com/download/video/36380551/', iframe: '' },
   { label: 'Geography',   sub: 'Sell your work worldwide',           bg: '#1e293b', rotate: '6deg',  top: '18px',
-    video: 'https://videos.pexels.com/video-files/1093662/1093662-sd_640_360_30fps.mp4' },
+    video: 'https://www.pexels.com/download/video/2695085/', iframe: '' },
 ]
 
 const genAiTools = [
@@ -25,13 +25,39 @@ const genAiTools = [
 
 import { ref, onMounted, onUnmounted } from 'vue'
 const aiOpen = ref(false)
+const mobileOpen = ref(false)
+const mobileAiOpen = ref(false)
 
 function closeAi() { aiOpen.value = false }
 onMounted(() => document.addEventListener('click', closeAi))
 onUnmounted(() => document.removeEventListener('click', closeAi))
 
+const touchedCard = ref<string | null>(null)
+
+function onCardTouch(id: string, el: HTMLElement) {
+  const prev = touchedCard.value
+  // reset previous card's video if different
+  if (prev && prev !== id) {
+    const prevEl = document.querySelector(`[data-card-id="${prev}"]`) as HTMLElement | null
+    if (prevEl) {
+      const v = prevEl.querySelector('video') as HTMLVideoElement | null
+      if (v) { v.pause(); v.currentTime = 0 }
+    }
+  }
+  if (touchedCard.value === id) {
+    // second touch — reset
+    const v = el.querySelector('video') as HTMLVideoElement | null
+    if (v) { v.pause(); v.currentTime = 0 }
+    touchedCard.value = null
+  } else {
+    const v = el.querySelector('video') as HTMLVideoElement | null
+    if (v) { v.load(); v.play() }
+    touchedCard.value = id
+  }
+}
+
 const swayDelay = ['0s','0.6s','1.2s','1.8s','2.4s']
-const logos = ['promptedit', 'LIIIII', 'contentcreator', 'oop', 'Logoipsum', 'LOC', 'promptedit', 'LIIIII', 'contentcreator', 'oop', 'Logoipsum', 'LOC']
+const logos = ['Seedance 2.0 Text to Video','Seedance 2.0 Image to Video','ElevenLabs Voice Changer','ElevenLabs TTS','HeyGen Avatar 4','Kling V3','Grok Imagine','Suno V4.5','Kling O1 Edit','Kling V2.6','Kling Motion Control','Kling V2.5 Turbo','Kling V2.1 Master','Veo 3.1','Veo 3.1 Fast','Nano Banana Pro','Sora 2','Sora 2 Pro','ElevenLabs Text to Sound','Nano Banana','Grok Imagine Edit','Topaz Upscale','Seedance 2.0 Fast Text to Video','Seedance 2.0 Fast Image to Video','Seedance 2.0 Text to Video','Seedance 2.0 Image to Video','ElevenLabs Voice Changer','ElevenLabs TTS','HeyGen Avatar 4','Kling V3','Grok Imagine','Suno V4.5','Kling O1 Edit','Kling V2.6','Kling Motion Control','Kling V2.5 Turbo','Kling V2.1 Master','Veo 3.1','Veo 3.1 Fast','Nano Banana Pro','Sora 2','Sora 2 Pro','ElevenLabs Text to Sound','Nano Banana']
 </script>
 
 <template>
@@ -69,6 +95,17 @@ const logos = ['promptedit', 'LIIIII', 'contentcreator', 'oop', 'Logoipsum', 'LO
           <input type="text" placeholder="Search millions of assets…" />
         </div>
 
+        <!-- Hamburger (mobile only) -->
+        <button class="nav-hamburger" @click.stop="mobileOpen = !mobileOpen" aria-label="Toggle menu">
+          <template v-if="mobileOpen">
+            <span class="ham-x ham-x1"></span>
+            <span class="ham-x ham-x2"></span>
+          </template>
+          <template v-else>
+            <span></span><span></span><span></span>
+          </template>
+        </button>
+
         <!-- Category links -->
         <div class="nav-links">
           <!-- Gen AI dropdown trigger -->
@@ -98,6 +135,36 @@ const logos = ['promptedit', 'LIIIII', 'contentcreator', 'oop', 'Logoipsum', 'LO
           </div>
         </a>
       </div>
+      <!-- Mobile menu -->
+      <div v-show="mobileOpen" class="mobile-menu" @click.stop>
+        <!-- Gen AI accordion -->
+        <button class="mobile-link mobile-ai-toggle" @click="mobileAiOpen = !mobileAiOpen">
+          <span>✦ Gen AI</span>
+          <span class="ai-chevron" :class="{ open: mobileAiOpen }">▾</span>
+        </button>
+        <div v-show="mobileAiOpen" class="mobile-ai-submenu">
+          <a href="#" class="mobile-ai-item" v-for="tool in genAiTools" :key="tool.name">
+            <span class="mobile-ai-emoji">{{ tool.emoji }}</span>
+            <div>
+              <p class="ai-item-name">{{ tool.name }}</p>
+              <p class="ai-item-desc" style="text-align:left;">{{ tool.desc }}</p>
+            </div>
+          </a>
+        </div>
+        <a href="#" class="mobile-link">Video Templates</a>
+        <a href="#" class="mobile-link">Stock Video</a>
+        <a href="#" class="mobile-link">Audio</a>
+        <a href="#" class="mobile-link">Graphics</a>
+        <a href="#" class="mobile-link">Design Templates</a>
+        <a href="#" class="mobile-link">Photos</a>
+        <a href="#" class="mobile-link">3D</a>
+        <a href="#" class="mobile-link">Fonts</a>
+        <a href="#" class="mobile-link">Web</a>
+        <div class="mobile-menu-actions">
+          <a href="#" class="mobile-link">Log in</a>
+          <a href="#" class="mobile-link-cta">Sign up free</a>
+        </div>
+      </div>
     </header>
 
     <!-- ═══ HERO ═══ -->
@@ -126,89 +193,97 @@ const logos = ['promptedit', 'LIIIII', 'contentcreator', 'oop', 'Logoipsum', 'LO
     </section>
 
     <!-- ═══ POLAROID CARDS ON DEEP U-WIRE ═══ -->
-    <!--
-      Wire: Q bezier P0=(0,10) control=(550,300) P2=(1100,10)
-      Deep U — 290px drop from edges to center.
-      B(t)y = (1-t)²·10 + 2(1-t)t·300 + t²·10
-        t=0.10 → y≈ 63px
-        t=0.28 → y≈163px
-        t=0.50 → y≈155px  (actual peak of parabola at t=0.5 → 155px)
-      Recomputed:
-        t=0.10: y=(0.81)(10)+2(0.9)(0.1)(300)+(0.01)(10) = 8.1+54+0.1 = 62px
-        t=0.28: y=(0.5184)(10)+2(0.72)(0.28)(300)+(0.0784)(10)=5.18+120.96+0.78=127px
-        t=0.50: y=(0.25)(10)+2(0.5)(0.5)(300)+(0.25)(10)=2.5+150+2.5=155px
-        t=0.72: y=127px (symmetric)
-        t=0.90: y=62px  (symmetric)
-    -->
-    <section style="position:relative;width:100%;height:460px;overflow:visible;margin-bottom:40px;">
+    <!-- Desktop: absolute U-wire layout | Mobile: horizontal scroll snap carousel -->
+    <section class="cards-section">
 
-      <!-- Wire SVG -->
-      <svg
-        style="position:absolute;top:0;left:0;width:100%;height:170px;pointer-events:none;z-index:1;"
-        viewBox="0 0 1100 170"
-        preserveAspectRatio="none"
-      >
-        <path
-          d="M 0 10 Q 550 300 1100 10"
-          fill="none"
-          stroke="#9ca3af"
-          stroke-width="1.8"
-        />
-      </svg>
+      <!-- ── Desktop wire + absolute cards ── -->
+      <div class="cards-desktop">
+        <!-- Wire SVG -->
+        <svg
+          style="position:absolute;top:0;left:0;width:100%;height:170px;pointer-events:none;z-index:1;"
+          viewBox="0 0 1100 170"
+          preserveAspectRatio="none"
+        >
+          <path d="M 0 10 Q 550 300 1100 10" fill="none" stroke="#9ca3af" stroke-width="1.8" />
+        </svg>
 
-      <!-- Cards pinned to wire points -->
-      <div
-        v-for="(card, i) in cards" :key="i"
-        class="sway-card"
-        :style="{
-          position:        'absolute',
-          left:            ['7%', '25%', '44%', '63%', '81%'][i],
-          top:             ['62px', '127px', '145px', '127px', '72px'][i],
-          width:           '190px',
-          zIndex:          10,
-          animationDelay:  swayDelay[i],
-        }"
-        @mouseenter="(e) => { const v = (e.currentTarget as HTMLElement).querySelector('video'); if(v){ v.load(); v.play() } }"
-        @mouseleave="(e) => { const v = (e.currentTarget as HTMLElement).querySelector('video'); if(v){ v.pause(); v.currentTime=0 } }"
-      >
-        <!-- Green pin dot + stem -->
-        <div style="display:flex;flex-direction:column;align-items:center;">
-          <div style="width:14px;height:14px;background:#22c55e;border-radius:50%;border:2.5px solid #fff;box-shadow:0 2px 10px rgba(34,197,94,0.55);"></div>
-          <div style="width:2px;height:16px;background:#22c55e;"></div>
-        </div>
-
-        <!-- Polaroid card -->
-        <div class="polaroid" style="background:#fff;border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,0.13);overflow:hidden;">
-          <!-- Video area: paused by default, plays on hover -->
-          <div style="width:100%;height:155px;position:relative;overflow:hidden;">
-            <video
-              class="card-video"
-              :src="card.video"
-              muted
-              loop
-              playsinline
-              preload="auto"
-              style="width:100%;height:100%;object-fit:cover;display:block;"
-            ></video>
+        <!-- Cards pinned to wire points -->
+        <div
+          v-for="(card, i) in cards" :key="'d'+i"
+          class="sway-card"
+          :data-card-id="'d'+i"
+          :style="{
+            position:       'absolute',
+            left:           ['7%', '25%', '44%', '63%', '81%'][i],
+            top:            ['62px', '127px', '145px', '127px', '72px'][i],
+            width:          '190px',
+            zIndex:         touchedCard === 'd'+i ? 50 : 10,
+            animationDelay: swayDelay[i],
+          }"
+          @mouseenter="(e) => { const v = (e.currentTarget as HTMLElement).querySelector('video'); if(v){ v.load(); v.play() } }"
+          @mouseleave="(e) => { const v = (e.currentTarget as HTMLElement).querySelector('video'); if(v){ v.pause(); v.currentTime=0 } }"
+          @touchstart.prevent="(e) => onCardTouch('d'+i, e.currentTarget as HTMLElement)"
+        >
+          <div style="display:flex;flex-direction:column;align-items:center;">
+            <div style="width:14px;height:14px;background:#22c55e;border-radius:50%;border:2.5px solid #fff;box-shadow:0 2px 10px rgba(34,197,94,0.55);"></div>
+            <div style="width:2px;height:16px;background:#22c55e;"></div>
           </div>
-          <div style="padding:12px 14px 14px;">
-            <p style="font-size:13px;font-weight:700;color:#111;margin:0 0 3px;">{{ card.label }}</p>
-            <p style="font-size:11px;color:#9ca3af;margin:0;line-height:1.4;">{{ card.sub }}</p>
+          <div class="polaroid" :class="{ 'card-touched': touchedCard === 'd'+i }" style="background:#fff;border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,0.13);overflow:hidden;">
+            <div style="width:100%;height:155px;position:relative;overflow:hidden;">
+              <iframe v-if="card.iframe" :src="card.iframe" frameborder="0" scrolling="no" style="width:100%;height:100%;border:none;display:block;"></iframe>
+              <video v-else class="card-video" :src="card.video" muted loop playsinline preload="auto" style="width:100%;height:100%;object-fit:cover;display:block;"></video>
+            </div>
+            <div style="padding:12px 14px 14px;">
+              <p style="font-size:13px;font-weight:700;color:#111;margin:0 0 3px;">{{ card.label }}</p>
+              <p style="font-size:11px;color:#9ca3af;margin:0;line-height:1.4;">{{ card.sub }}</p>
+            </div>
           </div>
         </div>
+
+        <!-- Water droplets -->
+        <div v-for="n in 20" :key="n" class="drop"
+          :style="{ left:(n*4.8)+'%', width:(4+(n%4)*1.5)+'px', height:(7+(n%4)*2.5)+'px', animationDuration:(1.1+(n%5)*0.3)+'s', animationDelay:(n*0.22)+'s' }"
+        ></div>
       </div>
 
-      <!-- Water droplets -->
-      <div v-for="n in 20" :key="n"
-        class="drop"
-        :style="{
-          left:              (n * 4.8) + '%',
-          width:             (4 + (n % 4) * 1.5) + 'px',
-          height:            (7 + (n % 4) * 2.5) + 'px',
-          animationDuration: (1.1 + (n % 5) * 0.3) + 's',
-          animationDelay:    (n * 0.22) + 's',
-        }"
-      ></div>
+      <!-- ── Mobile carousel ── -->
+      <div class="cards-mobile">
+        <!-- Single shared wire line across top -->
+        <div class="mobile-wire"></div>
+        <div class="cards-carousel">
+          <div
+            v-for="(card, i) in cards" :key="'m'+i"
+            class="carousel-slide"
+          >
+            <!-- pin -->
+            <div style="display:flex;flex-direction:column;align-items:center;">
+              <div style="width:14px;height:14px;background:#22c55e;border-radius:50%;border:2.5px solid #fff;box-shadow:0 2px 10px rgba(34,197,94,0.55);"></div>
+              <div style="width:2px;height:16px;background:#22c55e;"></div>
+            </div>
+            <!-- polaroid -->
+            <div
+              class="sway-card polaroid"
+              :class="{ 'card-touched': touchedCard === 'm'+i }"
+              :data-card-id="'m'+i"
+              :style="{ animationDelay: swayDelay[i] }"
+              style="background:#fff;border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,0.13);overflow:hidden;"
+              @touchstart.prevent="(e) => onCardTouch('m'+i, e.currentTarget as HTMLElement)"
+            >
+              <div style="width:100%;height:155px;overflow:hidden;">
+                <video :src="card.video" muted loop playsinline preload="auto" style="width:100%;height:100%;object-fit:cover;display:block;"></video>
+              </div>
+              <div style="padding:12px 14px 14px;">
+                <p style="font-size:13px;font-weight:700;color:#111;margin:0 0 3px;">{{ card.label }}</p>
+                <p style="font-size:11px;color:#9ca3af;margin:0;line-height:1.4;">{{ card.sub }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- scroll dots -->
+        <div class="carousel-dots">
+          <span v-for="(_, i) in cards" :key="i" class="carousel-dot"></span>
+        </div>
+      </div>
 
     </section>
     <section style="border-top:1px solid #e5e7eb;padding:28px 0;overflow:hidden;background:rgba(255,255,255,0.5);margin-top:20px;">
@@ -231,7 +306,7 @@ const logos = ['promptedit', 'LIIIII', 'contentcreator', 'oop', 'Logoipsum', 'LO
         <p style="font-size:20px;font-weight:700;color:#111;margin:0 0 12px;">Think of PromptEdit like a <span style="color:#22c55e;">grocery store for AI.</span></p>
         <p style="font-size:16px;color:#374151;line-height:1.8;margin:0;">Instead of signing up for a bunch of different websites, learning a bunch of different interfaces, and stacking expensive subscriptions on top of each other — PromptEdit gives you <strong>one place</strong> to access all the major tools you need to create AI content.</p>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:40px;">
+      <div class="intro-grid">
         <div style="background:#fff;border-radius:16px;padding:24px 16px;box-shadow:0 4px 20px rgba(0,0,0,0.06);border:1px solid #e5e7eb;">
           <div style="font-size:32px;margin-bottom:8px;">🚫</div>
           <p style="font-size:14px;font-weight:700;color:#111;margin:0 0 4px;">No Subscription Required</p>
@@ -491,6 +566,11 @@ const logos = ['promptedit', 'LIIIII', 'contentcreator', 'oop', 'Logoipsum', 'LO
 .polaroid {
   transition: transform 0.35s ease, box-shadow 0.35s ease;
 }
+.card-touched {
+  transform: scale(1.12);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.22) !important;
+  transition: transform 0.35s cubic-bezier(.34,1.56,.64,1), box-shadow 0.35s ease;
+}
 
 /* Water droplets */
 @keyframes fall {
@@ -662,45 +742,217 @@ a[href="#"]:last-of-type:hover {
 .ai-dropdown-panel {
   position: absolute;
   top: 100%;
-  left: 32px;
+  left: 0;
+  right: 0;
   background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
-  box-shadow: 0 16px 48px rgba(0,0,0,0.14);
-  padding: 12px;
-  width: 560px;
+  border-top: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+  padding: 12px 32px;
   z-index: 300;
-}
-.ai-dropdown-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4px;
-}
-.ai-dropdown-item {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  padding: 12px 14px;
-  border-radius: 10px;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.ai-dropdown-panel::-webkit-scrollbar { display: none; }
+.ai-dropdown-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  padding: 14px 16px;
+  border-radius: 12px;
   text-decoration: none;
   transition: background 0.15s;
+  flex: 1;
+  min-width: 100px;
 }
 .ai-dropdown-item:hover { background: #f5f3ff; }
 .ai-item-emoji {
-  font-size: 22px;
+  font-size: 26px;
   flex-shrink: 0;
-  margin-top: 1px;
 }
 .ai-item-name {
   font-size: 13px;
   font-weight: 700;
   color: #111;
-  margin: 0 0 2px;
+  margin: 0;
+  white-space: nowrap;
 }
 .ai-item-desc {
-  font-size: 12px;
+  font-size: 11px;
   color: #6b7280;
   margin: 0;
   line-height: 1.4;
+  white-space: normal;
+}
+
+/* ── Hamburger ── */
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  margin-left: auto;
+}
+.nav-hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: #111;
+  border-radius: 2px;
+  transition: background 0.15s;
+}
+.ham-x1 {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+.ham-x2 {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* ── Mobile menu ── */
+.mobile-menu {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-top: 1px solid #e5e7eb;
+  padding: 12px 0;
+}
+.mobile-link {
+  font-size: 15px;
+  font-weight: 500;
+  color: #374151;
+  text-decoration: none;
+  padding: 12px 24px;
+  transition: background 0.15s;
+}
+.mobile-link:hover { background: #f3f4f6; }
+.mobile-menu-actions {
+  display: flex;
+  gap: 12px;
+  padding: 12px 24px 4px;
+  border-top: 1px solid #e5e7eb;
+  margin-top: 4px;
+}
+.mobile-link-cta {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  background: #22c55e;
+  padding: 8px 20px;
+  border-radius: 999px;
+  text-decoration: none;
+}
+
+/* Mobile AI submenu */
+.mobile-ai-toggle {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: inherit;
+}
+.mobile-ai-submenu {
+  background: #f5f3ff;
+  border-top: 1px solid #ede9fe;
+  border-bottom: 1px solid #ede9fe;
+}
+.mobile-ai-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 32px;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.mobile-ai-item:hover { background: #ede9fe; }
+.mobile-ai-emoji { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+
+@media (max-width: 768px) {
+  .nav-hamburger { display: flex; }
+  .nav-search-bar { display: none; }
+  .nav-links { display: none; }
+  .nav-top { display: none; }
+}
+
+/* ── Cards section layout ── */
+.cards-section {
+  margin-bottom: 40px;
+}
+.cards-desktop {
+  position: relative;
+  width: 100%;
+  height: 460px;
+  overflow: visible;
+}
+.cards-mobile {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 0 24px;
+  position: relative;
+}
+.mobile-wire {
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, #9ca3af 10%, #9ca3af 90%, transparent 100%);
+  margin-bottom: 0;
+  position: absolute;
+  top: 14px;
+  left: 0;
+}
+.cards-carousel {
+  display: flex;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  gap: 20px;
+  padding: 0 32px 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.cards-carousel::-webkit-scrollbar { display: none; }
+.carousel-slide {
+  scroll-snap-align: center;
+  flex-shrink: 0;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.carousel-dots {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+.carousel-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #d1d5db;
+}
+
+.intro-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+@media (max-width: 768px) {
+  .cards-desktop { display: none; }
+  .cards-mobile { display: flex; }
+  .intro-grid { grid-template-columns: 1fr; }
 }
 </style>
