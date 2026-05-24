@@ -5,6 +5,6 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [tailwindcss(), vue()],
   server: {
-    allowedHosts: 'rickie-unaldermanly-jessenia.ngrok-free.dev',
+    allowedHosts: true,
   },
 })
